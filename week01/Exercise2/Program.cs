@@ -51,7 +51,7 @@ class Program
             Console.WriteLine("Well done, you passed!");
         }
 
-        else 
+        else
         {
             Console.WriteLine("You need more efforts next time.");
         }

@@ -17,7 +17,6 @@ class Program
 
             Console.WriteLine("A magic number between 1 and 100 has been generated. Try to guess it!");
 
-            // Loop until the guess matches the magic number
             while (guess != magicNumber)
             {
                 Console.Write("What is your guess?: ");
@@ -38,16 +37,14 @@ class Program
                 }
             }
 
-            // Inform the user of their guess count
             Console.WriteLine($"It took you {guessCount} guesses to find the magic number!");
 
-            // Ask if they want to play again
             Console.Write("Do you want to play again? (yes/no): ");
             string response = Console.ReadLine().ToLower();
 
             if (response != "yes")
             {
-                playAgain = false; // Exit the loop if the user doesn't want to play again
+                playAgain = false;
             }
         }
     }
