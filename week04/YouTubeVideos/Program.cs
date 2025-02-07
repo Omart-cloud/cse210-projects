@@ -1,87 +1,85 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 class Program
 {
     static void Main()
     {
-        // YouTube Video Abstraction Program
-        YouTubeVideo video = new YouTubeVideo("Intro to AI", "https://youtube.com/video123", 600);
-        TranscriptExtractor extractor = new TranscriptExtractor(video);
-        string transcript = extractor.GetTranscript();
+        List<Video> videos = new List<Video>();
 
-        TextProcessor processor = new TextProcessor();
-        string cleanedTranscript = processor.CleanText(transcript);
+        /* Creating video objects */
+        Video video1 = new Video("Intro to AI", "John Doe", 600);
+        Video video2 = new Video("Machine Learning Basics", "Jane Smith", 750);
+        Video video3 = new Video("Deep Learning Explained", "Alice Johnson", 900);
 
-        Summarizer summarizer = new Summarizer();
-        string summary = summarizer.GenerateSummary(cleanedTranscript);
+        /* Adding comments to videos */
+        video1.AddComment(new Comment("User1", "Great explanation!"));
+        video1.AddComment(new Comment("User2", "Very informative."));
+        video1.AddComment(new Comment("User3", "Helped me a lot!"));
 
-        ReportGenerator reportGenerator = new ReportGenerator();
-        reportGenerator.GenerateReport(video, summary);
+        video2.AddComment(new Comment("User4", "Nice breakdown of concepts."));
+        video2.AddComment(new Comment("User5", "I finally understand ML!"));
+        video2.AddComment(new Comment("User6", "Well structured and clear."));
 
-        Console.WriteLine("\n--- Abstraction Program Execution Complete ---\n");
+        video3.AddComment(new Comment("User7", "Deep learning is fascinating!"));
+        video3.AddComment(new Comment("User8", "Amazing content."));
+        video3.AddComment(new Comment("User9", "Thanks for this video!"));
+
+        videos.Add(video1);
+        videos.Add(video2);
+        videos.Add(video3);
+
+        /* Display video details */
+        foreach (var video in videos)
+        {
+            Console.WriteLine($"\nTitle: {video.Title}");
+            Console.WriteLine($"Author: {video.Author}");
+            Console.WriteLine($"Length: {video.LengthInSeconds} seconds");
+            Console.WriteLine($"Number of Comments: {video.GetCommentCount()}");
+            Console.WriteLine("Comments:");
+            
+            foreach (var comment in video.Comments)
+            {
+                Console.WriteLine($"- {comment.CommenterName}: {comment.Text}");
+            }
+        }
     }
 }
 
-public class YouTubeVideo {
+public class Video
+{
     public string Title { get; }
-    public string Url { get; }
-    public int DurationInSeconds { get; }
+    public string Author { get; }
+    public int LengthInSeconds { get; }
+    public List<Comment> Comments { get; }
 
-    public YouTubeVideo(string title, string url, int duration) {
+    public Video(string title, string author, int length)
+    {
         Title = title;
-        Url = url;
-        DurationInSeconds = duration;
+        Author = author;
+        LengthInSeconds = length;
+        Comments = new List<Comment>();
+    }
+
+    public void AddComment(Comment comment)
+    {
+        Comments.Add(comment);
+    }
+
+    public int GetCommentCount()
+    {
+        return Comments.Count;
     }
 }
 
-public class TranscriptExtractor {
-    private YouTubeVideo _video;
-    public TranscriptExtractor(YouTubeVideo video)
-    {
-        _video = video;
-    }
-
-    public string GetTranscript()
-    {
-        Console.WriteLine($"Fetching transcript for: {_video.Title}");
-        return _FetchFromAPI();
-    }
-
-    private string _FetchFromAPI()
-    {
-        return "This is a sample transcript. The video explains AI concepts in a simple way.";
-    }
-}
-
-public class TextProcessor
+public class Comment
 {
-    public string CleanText(string text)
-    {
-        Console.WriteLine("Cleaning transcript...");
-        return text.ToLower().Replace(".", "").Replace(",", "");
-    }
-}
+    public string CommenterName { get; }
+    public string Text { get; }
 
-public class Summarizer
-{
-    public string GenerateSummary(string text)
+    public Comment(string commenterName, string text)
     {
-        Console.WriteLine("Generating summary...");
-        var words = text.Split(' ');
-        return string.Join(" ", words.Take(words.Length / 2)) + "...";
-    }
-}
-
-public class ReportGenerator
-{
-    public void GenerateReport(YouTubeVideo video, string summary)
-    {
-        Console.WriteLine("\n--- Summary Report ---");
-        Console.WriteLine($"Title: {video.Title}");
-        Console.WriteLine($"URL: {video.Url}");
-        Console.WriteLine($"Duration: {video.DurationInSeconds} seconds");
-        Console.WriteLine($"Summary: {summary}");
+        CommenterName = commenterName;
+        Text = text;
     }
 }
