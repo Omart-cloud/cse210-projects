@@ -7,29 +7,29 @@ class Program
     {
         List<Video> videos = new List<Video>();
 
-        /* Creating video objects */
-        Video video1 = new Video("Intro to AI", "John Doe", 600);
-        Video video2 = new Video("Machine Learning Basics", "Jane Smith", 750);
-        Video video3 = new Video("Deep Learning Explained", "Alice Johnson", 900);
+        // Creating BYU programming-related video objects
+        Video video1 = new Video("BYU Computing Bootcamp", "BYU", 1200);
+        Video video2 = new Video("BYU Software Engineering Overview", "BYU Computer Science", 900);
+        Video video3 = new Video("BYU Supercomputing Debugging Guide", "BYU Supercomputing", 1100);
 
-        /* Adding comments to videos */
-        video1.AddComment(new Comment("User1", "Great explanation!"));
-        video1.AddComment(new Comment("User2", "Very informative."));
-        video1.AddComment(new Comment("User3", "Helped me a lot!"));
+        // Adding comments to videos
+        video1.AddComment(new Comment("User1", "This helped me understand coding better!"));
+        video1.AddComment(new Comment("User2", "Great introduction to computing!"));
+        video1.AddComment(new Comment("User3", "Very informative and well explained."));
 
-        video2.AddComment(new Comment("User4", "Nice breakdown of concepts."));
-        video2.AddComment(new Comment("User5", "I finally understand ML!"));
-        video2.AddComment(new Comment("User6", "Well structured and clear."));
+        video2.AddComment(new Comment("User4", "Software engineering is so interesting!"));
+        video2.AddComment(new Comment("User5", "I love how this breaks down the concepts."));
+        video2.AddComment(new Comment("User6", "Well-structured and easy to follow."));
 
-        video3.AddComment(new Comment("User7", "Deep learning is fascinating!"));
-        video3.AddComment(new Comment("User8", "Amazing content."));
-        video3.AddComment(new Comment("User9", "Thanks for this video!"));
+        video3.AddComment(new Comment("User7", "Supercomputing is fascinating!"));
+        video3.AddComment(new Comment("User8", "Great debugging techniques."));
+        video3.AddComment(new Comment("User9", "Thanks for sharing this content!"));
 
         videos.Add(video1);
         videos.Add(video2);
         videos.Add(video3);
 
-        /* Display video details */
+        // Display video details
         foreach (var video in videos)
         {
             Console.WriteLine($"\nTitle: {video.Title}");
