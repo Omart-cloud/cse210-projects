@@ -1,12 +1,15 @@
 using System;
+using System.IO;
 
 class Program
 {
     static void Main()
     {
+        LoadPreviousLog();
+
         while (true)
         {
-            Console.Clear(); // Clears the console for a clean menu display
+            Console.Clear();
             Console.WriteLine("Welcome to the Mindfulness App!");
             Console.WriteLine("Please select an activity:");
             Console.WriteLine("1. Breathing Activity");
@@ -18,34 +21,23 @@ class Program
             string input = Console.ReadLine();
             Console.Clear();
 
-            switch (input)
+            if (input == "4") break;
+
+            Activity activity = input switch
             {
-                case "1":
-                    BreathingActivity breathing = new BreathingActivity();
-                    breathing.RunActivity();
-                    break;
+                "1" => new BreathingActivity(),
+                "2" => new ReflectionActivity(),
+                "3" => new ListingActivity(),
+                _ => null
+            };
 
-                case "2":
-                    ReflectionActivity reflection = new ReflectionActivity();
-                    reflection.RunActivity();
-                    break;
-
-                case "3":
-                    ListingActivity listing = new ListingActivity();
-                    listing.RunActivity();
-                    break;
-
-                case "4":
-                    Console.WriteLine("Thank you for using the Mindfulness App. Goodbye!");
-                    return; // Exit the program
-
-                default:
-                    Console.WriteLine("Invalid choice, please try again.");
-                    break;
-            }
-
-            Console.WriteLine("\nPress Enter to return to the main menu...");
-            Console.ReadLine();
+            activity?.RunActivity();
         }
+    }
+
+    private static void LoadPreviousLog()
+    {
+        if (File.Exists("activity_log.txt"))
+            Console.WriteLine(File.ReadAllText("activity_log.txt"));
     }
 }

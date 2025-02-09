@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 public class ListingActivity : Activity
 {
@@ -12,47 +13,62 @@ public class ListingActivity : Activity
         "Who are some of your personal heroes?"
     };
 
-    private int _count; // Stores the number of user inputs
+    private static int timesCompleted = 0;
+    private List<string> usedPrompts = new List<string>();
 
-    public ListingActivity() 
+    public ListingActivity()
         : base("Listing Activity", "This activity helps you reflect on the good things in your life by listing as many things as you can.")
     {
-    }
-
-    private string GetRandomPrompt()
-    {
-        Random random = new Random();
-        return _prompts[random.Next(_prompts.Count)];
-    }
-
-    private List<string> GetListFromUser()
-    {
-        List<string> userResponses = new List<string>();
-        Console.WriteLine("Start listing your responses. Type 'done' when finished:");
-
-        string response;
-        while ((response = Console.ReadLine())?.ToLower() != "done")
-        {
-            userResponses.Add(response);
-        }
-
-        _count = userResponses.Count;
-        return userResponses;
     }
 
     public void RunActivity()
     {
         DisplayStartingMessage();
+        timesCompleted++;
 
-        string prompt = GetRandomPrompt();
-        Console.WriteLine($"\nConsider this prompt: {prompt}\n");
+        string prompt = GetUniquePrompt();
+        Console.WriteLine($"\nConsider this prompt: {prompt}");
         ShowCountdown(3);
 
-        Console.WriteLine("Now, list as many things as you can:");
-        List<string> responses = GetListFromUser();
+        List<string> responses = GetUserResponses();
 
-        Console.WriteLine($"\nYou listed {_count} items. Well done!");
-
+        Console.WriteLine($"\nYou listed {responses.Count} items. Well done!");
+        SaveActivityLog("Listing Activity", responses);
         DisplayEndingMessage();
+    }
+
+    private string GetUniquePrompt()
+    {
+        if (usedPrompts.Count == _prompts.Count)
+            usedPrompts.Clear();
+
+        string prompt;
+        do
+        {
+            prompt = _prompts[new Random().Next(_prompts.Count)];
+        } while (usedPrompts.Contains(prompt));
+
+        usedPrompts.Add(prompt);
+        return prompt;
+    }
+
+    private List<string> GetUserResponses()
+    {
+        List<string> responses = new List<string>();
+        Console.WriteLine("Start listing your responses. Type 'done' when finished:");
+
+        string response;
+        while ((response = Console.ReadLine())?.ToLower() != "done")
+        {
+            responses.Add(response);
+        }
+
+        return responses;
+    }
+
+    private void SaveActivityLog(string activityName, List<string> responses)
+    {
+        string log = $"{DateTime.Now}: Completed {activityName}. Listed {responses.Count} items.";
+        File.AppendAllText("activity_log.txt", log + Environment.NewLine);
     }
 }
