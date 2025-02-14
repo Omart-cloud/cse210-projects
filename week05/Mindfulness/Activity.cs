@@ -1,39 +1,45 @@
-public class Activity
-{
-    protected string Name { get; }
-    protected string Description { get; }
-    protected int Duration { get; private set; }
+using System;
+using System.IO;
+using System.Threading;
 
-    public Activity(string name, string description)
+public abstract class Activity
+{
+    protected string _name { get; }
+    protected string _description { get; }
+    protected int _duration { get; private set; }
+    
+    protected Activity(string name, string description)
     {
-        Name = name;
-        Description = description;
+        _name = name;
+        _description = description;
     }
 
-    public void DisplayStartingMessage()
+    public abstract void RunActivity();
+
+    protected void DisplayStartingMessage()
     {
         Console.Clear();
-        Console.WriteLine($"Activity: {Name}");
-        Console.WriteLine($"{Description}\n");
+        Console.WriteLine($"Activity: {_name}");
+        Console.WriteLine($"{_description}\n");
 
         Console.Write("Enter the duration in seconds: ");
-        Duration = int.Parse(Console.ReadLine());
+        _duration = int.Parse(Console.ReadLine());
 
         Console.WriteLine("\nGet ready...");
         ShowSpinner(3);
     }
 
-    public void DisplayEndingMessage()
+    protected void DisplayEndingMessage()
     {
         Console.WriteLine("\nGreat job! You have completed the activity.");
-        Console.WriteLine($"You completed {Name} for {Duration} seconds.");
+        Console.WriteLine($"You completed {_name} for {_duration} seconds.");
         ShowSpinner(3);
     }
 
-    public void ShowSpinner(int seconds)
+    protected void ShowSpinner(int seconds)
     {
         char[] spinner = { '|', '/', '-', '\\' };
-        for (int i = 0; i < seconds * 4; i++)  // Loops for the given seconds
+        for (int i = 0; i < seconds * 4; i++)
         {
             Console.Write($"\r{spinner[i % 4]} ");
             Thread.Sleep(250);
@@ -41,7 +47,7 @@ public class Activity
         Console.Write("\r   \r");
     }
 
-    public void ShowCountdown(int seconds)
+    protected void ShowCountdown(int seconds)
     {
         for (int i = seconds; i > 0; i--)
         {
@@ -49,5 +55,11 @@ public class Activity
             Thread.Sleep(1000);
         }
         Console.Write("\r   \r");
+    }
+
+    protected void SaveActivityLog(string activityName, int timesCompleted, string additionalInfo = "")
+    {
+        string log = $"{DateTime.Now}: Completed {activityName}. Total times: {timesCompleted}.{additionalInfo}";
+        File.AppendAllText("activity_log.txt", log + Environment.NewLine);
     }
 }

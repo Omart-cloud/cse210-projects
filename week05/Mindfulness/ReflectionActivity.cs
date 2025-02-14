@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 public class ReflectionActivity : Activity
 {
-    private List<string> _prompts = new List<string>
+    private readonly List<string> _prompts = new List<string>
     {
         "Think of a time when you stood up for someone else.",
         "Think of a time when you did something really difficult.",
@@ -12,7 +11,7 @@ public class ReflectionActivity : Activity
         "Think of a time when you did something truly selfless."
     };
 
-    private List<string> _questions = new List<string>
+    private readonly List<string> _questions = new List<string>
     {
         "Why was this experience meaningful to you?",
         "How did you get started?",
@@ -20,18 +19,18 @@ public class ReflectionActivity : Activity
         "What did you learn from this experience?"
     };
 
-    private static int timesCompleted = 0;
-    private List<string> usedPrompts = new List<string>();
+    private static int _timesCompleted = 0;
+    private readonly List<string> _usedPrompts = new List<string>();
 
     public ReflectionActivity()
         : base("Reflection Activity", "This activity helps you reflect on moments of strength and resilience in your life.")
     {
     }
 
-    public void RunActivity()
+    public override void RunActivity()
     {
         DisplayStartingMessage();
-        timesCompleted++;
+        _timesCompleted++;
 
         string prompt = GetUniquePrompt();
         Console.WriteLine($"\nReflect on this: {prompt}");
@@ -44,27 +43,21 @@ public class ReflectionActivity : Activity
         }
 
         DisplayEndingMessage();
-        SaveActivityLog("Reflection Activity");
+        SaveActivityLog(_name, _timesCompleted);
     }
 
     private string GetUniquePrompt()
     {
-        if (usedPrompts.Count == _prompts.Count)
-            usedPrompts.Clear(); // Reset when all have been used
+        if (_usedPrompts.Count == _prompts.Count)
+            _usedPrompts.Clear();
 
         string prompt;
         do
         {
             prompt = _prompts[new Random().Next(_prompts.Count)];
-        } while (usedPrompts.Contains(prompt));
+        } while (_usedPrompts.Contains(prompt));
 
-        usedPrompts.Add(prompt);
+        _usedPrompts.Add(prompt);
         return prompt;
-    }
-
-    private void SaveActivityLog(string activityName)
-    {
-        string log = $"{DateTime.Now}: Completed {activityName}. Total times: {timesCompleted}";
-        File.AppendAllText("activity_log.txt", log + Environment.NewLine);
     }
 }

@@ -1,21 +1,21 @@
 using System;
-using System.IO;
+using System.Threading;
 
 public class BreathingActivity : Activity
 {
-    private static int timesCompleted = 0; // Tracks how many times the activity was performed
+    private static int _timesCompleted = 0;
 
     public BreathingActivity() 
         : base("Breathing Activity", "This activity helps you relax by guiding your breathing.")
     {
     }
 
-    public void RunActivity()
+    public override void RunActivity()
     {
         DisplayStartingMessage();
-        timesCompleted++;
+        _timesCompleted++;
 
-        for (int i = 0; i < Duration; i += 6)
+        for (int i = 0; i < _duration; i += 6)
         {
             Console.Clear();
             Console.WriteLine("\n   🫁 Inhale...      ");
@@ -27,7 +27,7 @@ public class BreathingActivity : Activity
         }
 
         DisplayEndingMessage();
-        SaveActivityLog("Breathing Activity");
+        SaveActivityLog(_name, _timesCompleted);
     }
 
     private void ShowBreathingAnimation(int seconds)
@@ -36,14 +36,8 @@ public class BreathingActivity : Activity
         for (int i = 0; i < animationStages.Length; i++)
         {
             Console.Write($"\r{animationStages[i]}   ");
-            System.Threading.Thread.Sleep(seconds * 100);
+            Thread.Sleep(seconds * 100);
         }
         Console.Write("\r       ");
-    }
-
-    private void SaveActivityLog(string activityName)
-    {
-        string log = $"{DateTime.Now}: Completed {activityName}. Total times: {timesCompleted}";
-        File.AppendAllText("activity_log.txt", log + Environment.NewLine);
     }
 }

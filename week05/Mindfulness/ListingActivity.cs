@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 public class ListingActivity : Activity
 {
-    private List<string> _prompts = new List<string>
+    private readonly List<string> _prompts = new List<string>
     {
         "Who are people that you appreciate?",
         "What are personal strengths of yours?",
@@ -13,42 +12,42 @@ public class ListingActivity : Activity
         "Who are some of your personal heroes?"
     };
 
-    private static int timesCompleted = 0;
-    private List<string> usedPrompts = new List<string>();
+    private static int _timesCompleted = 0;
+    private readonly List<string> _usedPrompts = new List<string>();
 
     public ListingActivity()
         : base("Listing Activity", "This activity helps you reflect on the good things in your life by listing as many things as you can.")
     {
     }
 
-    public void RunActivity()
+    public override void RunActivity()
     {
         DisplayStartingMessage();
-        timesCompleted++;
+        _timesCompleted++;
 
         string prompt = GetUniquePrompt();
         Console.WriteLine($"\nConsider this prompt: {prompt}");
         ShowCountdown(3);
 
         List<string> responses = GetUserResponses();
-
         Console.WriteLine($"\nYou listed {responses.Count} items. Well done!");
-        SaveActivityLog("Listing Activity", responses);
+        
+        SaveActivityLog(_name, _timesCompleted, $" Listed {responses.Count} items.");
         DisplayEndingMessage();
     }
 
     private string GetUniquePrompt()
     {
-        if (usedPrompts.Count == _prompts.Count)
-            usedPrompts.Clear();
+        if (_usedPrompts.Count == _prompts.Count)
+            _usedPrompts.Clear();
 
         string prompt;
         do
         {
             prompt = _prompts[new Random().Next(_prompts.Count)];
-        } while (usedPrompts.Contains(prompt));
+        } while (_usedPrompts.Contains(prompt));
 
-        usedPrompts.Add(prompt);
+        _usedPrompts.Add(prompt);
         return prompt;
     }
 
@@ -60,15 +59,10 @@ public class ListingActivity : Activity
         string response;
         while ((response = Console.ReadLine())?.ToLower() != "done")
         {
-            responses.Add(response);
+            if (!string.IsNullOrWhiteSpace(response))
+                responses.Add(response);
         }
 
         return responses;
-    }
-
-    private void SaveActivityLog(string activityName, List<string> responses)
-    {
-        string log = $"{DateTime.Now}: Completed {activityName}. Listed {responses.Count} items.";
-        File.AppendAllText("activity_log.txt", log + Environment.NewLine);
     }
 }
